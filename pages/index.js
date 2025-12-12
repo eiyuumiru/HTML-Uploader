@@ -10,6 +10,7 @@ export default function Home() {
   const [files, setFiles] = useState([]);
   const [loadingFiles, setLoadingFiles] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -80,6 +81,28 @@ export default function Home() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const droppedFile = e.dataTransfer.files[0];
+    if (droppedFile && droppedFile.type === 'text/html') {
+      setFile(droppedFile);
+      setError(null);
+    } else if (droppedFile) {
+      setError('Vui lòng chọn file HTML');
+    }
+  };
+
   useEffect(() => {
     loadFiles();
   }, []);
@@ -115,7 +138,12 @@ export default function Home() {
               <span className="hl-pink">📤 Upload File</span>
             </h2>
 
-            <div className="upload-area">
+            <div
+              className={`upload-area ${isDragging ? 'dragging' : ''}`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+            >
               <input
                 id="fileInput"
                 type="file"
@@ -124,11 +152,20 @@ export default function Home() {
                 className="file-input"
               />
               <label htmlFor="fileInput" className="file-label">
-                <div className="file-icon">📁</div>
-                <span className="file-text">
-                  {file ? file.name : 'Chọn file HTML'}
-                </span>
-                <span className="file-hint">hoặc kéo thả vào đây</span>
+                {isDragging ? (
+                  <>
+                    <div className="file-icon">✏️</div>
+                    <span className="file-text drop-text">Ném file vào đây!</span>
+                  </>
+                ) : (
+                  <>
+                    <div className="file-icon">📁</div>
+                    <span className="file-text">
+                      {file ? file.name : 'Chọn file HTML'}
+                    </span>
+                    {!file && <span className="file-hint">hoặc kéo thả vào đây</span>}
+                  </>
+                )}
               </label>
             </div>
 
@@ -186,7 +223,12 @@ export default function Home() {
 
             {loadingFiles ? (
               <div className="loading-state">
-                <span className="spinner"></span>
+                <div className="pen-writing">
+                  <span className="pen">✏️</span>
+                  <span className="writing-dots">
+                    <span>.</span><span>.</span><span>.</span>
+                  </span>
+                </div>
                 <p>Đang tải...</p>
               </div>
             ) : files.length === 0 ? (
@@ -309,6 +351,23 @@ export default function Home() {
         .upload-area {
           position: relative;
           margin-bottom: 16px;
+          transition: all 0.3s ease;
+        }
+
+        .upload-area.dragging .file-label {
+          background: rgba(3, 105, 161, 0.15);
+          border-color: #0369A1;
+          border-style: solid;
+          transform: scale(1.02);
+        }
+
+        .drop-text {
+          animation: pulse 0.8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.6; }
         }
 
         .file-input {
@@ -347,6 +406,8 @@ export default function Home() {
           font-size: 1.1rem;
           font-weight: 600;
           color: #0369A1;
+          text-align: center;
+          word-break: break-word;
         }
 
         .file-hint {
@@ -389,18 +450,45 @@ export default function Home() {
           cursor: not-allowed;
         }
 
-        /* ===== SPINNER ===== */
-        .spinner {
-          width: 18px;
-          height: 18px;
-          border: 2px solid #D7C2A8;
-          border-top-color: #1F2937;
-          border-radius: 50%;
-          animation: spin 0.8s linear infinite;
+        /* ===== PEN WRITING ANIMATION ===== */
+        .pen-writing {
+          display: flex;
+          align-items: center;
+          gap: 4px;
         }
 
-        @keyframes spin {
-          to { transform: rotate(360deg); }
+        .pen {
+          font-size: 1.8rem;
+          animation: penMove 0.6s ease-in-out infinite;
+          transform-origin: bottom right;
+        }
+
+        @keyframes penMove {
+          0%, 100% { transform: rotate(-5deg); }
+          50% { transform: rotate(5deg); }
+        }
+
+        .writing-dots {
+          display: flex;
+          gap: 2px;
+          font-family: 'Mali', cursive;
+          font-size: 2rem;
+          font-weight: 700;
+          color: #1F2937;
+        }
+
+        .writing-dots span {
+          opacity: 0;
+          animation: dotAppear 1.2s ease-in-out infinite;
+        }
+
+        .writing-dots span:nth-child(1) { animation-delay: 0s; }
+        .writing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .writing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes dotAppear {
+          0%, 20% { opacity: 0; }
+          40%, 100% { opacity: 1; }
         }
 
         /* ===== MESSAGES ===== */
@@ -409,6 +497,7 @@ export default function Home() {
           padding: 16px;
           border-radius: 12px;
           font-family: 'Mali', cursive;
+          text-align: center;
         }
 
         .error-msg {
@@ -424,6 +513,7 @@ export default function Home() {
 
         .url-container {
           display: flex;
+          justify-content: center;
           gap: 8px;
           margin-top: 12px;
         }
@@ -501,7 +591,22 @@ export default function Home() {
         }
 
         /* ===== STATES ===== */
-        .loading-state,
+        .loading-state {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          padding: 40px 16px;
+          color: #4B5563;
+        }
+
+        .loading-state p {
+          font-family: 'Mali', cursive;
+          font-size: 1rem;
+          margin: 0;
+        }
+
         .empty-state {
           text-align: center;
           padding: 32px 16px;
