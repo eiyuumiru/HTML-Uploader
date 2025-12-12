@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Head from 'next/head';
 import { Pacifico, Mali, Patrick_Hand } from 'next/font/google';
 
@@ -30,8 +30,6 @@ export default function Home() {
   const [uploadedUrl, setUploadedUrl] = useState(null);
   const [uploadedFilename, setUploadedFilename] = useState(null);
   const [error, setError] = useState(null);
-  const [files, setFiles] = useState([]);
-  const [loadingFiles, setLoadingFiles] = useState(false);
   const [copied, setCopied] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -72,7 +70,6 @@ export default function Home() {
         setUploadedFilename(data.filename);
         setFile(null);
         document.getElementById('fileInput').value = '';
-        loadFiles();
       } else {
         setError(data.error || 'Upload thất bại');
       }
@@ -80,21 +77,6 @@ export default function Home() {
       setError('Lỗi: ' + err.message);
     } finally {
       setUploading(false);
-    }
-  };
-
-  const loadFiles = async () => {
-    setLoadingFiles(true);
-    try {
-      const response = await fetch('/api/files');
-      const data = await response.json();
-      if (response.ok) {
-        setFiles(data.files || []);
-      }
-    } catch (err) {
-      console.error('Lỗi load files:', err);
-    } finally {
-      setLoadingFiles(false);
     }
   };
 
@@ -125,10 +107,6 @@ export default function Home() {
       setError('Vui lòng chọn file HTML');
     }
   };
-
-  useEffect(() => {
-    loadFiles();
-  }, []);
 
   return (
     <>
@@ -226,55 +204,6 @@ export default function Home() {
               </div>
             )}
           </div>
-
-          {/* Files List */}
-          <section className="files-section">
-            <div className="section-header">
-              <h2 className="section-title">
-                <span className="hl-blue">📋 Files đã upload</span>
-              </h2>
-              <button onClick={loadFiles} className="refresh-btn" title="Làm mới">
-                🔄
-              </button>
-            </div>
-
-            {loadingFiles ? (
-              <div className="loading-state">
-                <div className="pen-writing">
-                  <span className="pen">✏️</span>
-                  <span className="writing-dots">
-                    <span>.</span><span>.</span><span>.</span>
-                  </span>
-                </div>
-                <p>Đang tải...</p>
-              </div>
-            ) : files.length === 0 ? (
-              <div className="empty-state">
-                <div className="empty-icon">📝</div>
-                <p>Chưa có file nào</p>
-                <span>Upload file HTML đầu tiên của bạn!</span>
-              </div>
-            ) : (
-              <div className="files-grid">
-                {files.map((file, index) => (
-                  <a
-                    key={index}
-                    href={`/view/${encodeURIComponent(file.filename)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="file-card sticky-note"
-                    style={{ '--rotate': `${(index % 2 === 0 ? 1 : -1) * (1 + (index % 3) * 0.5)}deg` }}
-                  >
-                    <div className="file-card-icon">📄</div>
-                    <span className="file-card-name">{file.filename}</span>
-                    <span className="file-card-date">
-                      {new Date(file.uploadedAt).toLocaleDateString('vi-VN')}
-                    </span>
-                  </a>
-                ))}
-              </div>
-            )}
-          </section>
         </main>
 
         {/* Footer */}
@@ -312,6 +241,7 @@ export default function Home() {
           display: flex;
           flex-direction: column;
           align-items: center;
+          justify-content: center;
           box-sizing: border-box;
         }
 
