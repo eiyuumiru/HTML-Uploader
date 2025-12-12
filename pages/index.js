@@ -5,6 +5,7 @@ export default function Home() {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadedUrl, setUploadedUrl] = useState(null);
+  const [uploadedFilename, setUploadedFilename] = useState(null);
   const [error, setError] = useState(null);
   const [files, setFiles] = useState([]);
   const [loadingFiles, setLoadingFiles] = useState(false);
@@ -42,7 +43,8 @@ export default function Home() {
       const data = await response.json();
 
       if (response.ok) {
-        setUploadedUrl(data.url);
+        setUploadedUrl(`${window.location.origin}/view/${encodeURIComponent(data.filename)}`);
+        setUploadedFilename(data.filename);
         setFile(null);
         document.getElementById('fileInput').value = '';
         loadFiles();
@@ -179,7 +181,7 @@ export default function Home() {
                     }}
                   >
                     <a
-                      href={file.url}
+                      href={`/view/${encodeURIComponent(file.filename)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="file-link"
