@@ -283,6 +283,14 @@ export default function Home() {
         </footer>
       </div>
 
+      <style jsx global>{`
+        html, body {
+          margin: 0;
+          padding: 0;
+          background-color: #FFF7EA;
+        }
+      `}</style>
+
       <style jsx>{`
         /* ===== BASE STYLES ===== */
         .page-container {
@@ -304,6 +312,7 @@ export default function Home() {
           display: flex;
           flex-direction: column;
           align-items: center;
+          box-sizing: border-box;
         }
 
         /* ===== HEADER ===== */
