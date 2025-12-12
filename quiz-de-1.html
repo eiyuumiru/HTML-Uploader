@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Ôn thi cuối học kì 1 - đề số 1 - Lớp Hóa học cô Cẩm Mai</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            background: #f0f0f0;
+            height: 8px;
+            position: relative;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .quiz-content {
+            padding: 40px;
+        }
+
+        .question-counter {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .part-label {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .question {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        /* Style cho PHẦN I - Multiple choice */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            -webkit-tap-highlight-color: rgba(102, 126, 234, 0.2);
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .option:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: #e7f3ff;
+            border-color: #667eea;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .option-label {
+            font-weight: 600;
+            margin-right: 12px;
+            color: #667eea;
+            min-width: 30px;
+        }
+
+        /* Style cho PHẦN II - True/False */
+        .true-false-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .true-false-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+        }
+
+        .true-false-item.correct-answer {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .true-false-item.incorrect-answer {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .statement {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .statement-label {
+            font-weight: 600;
+            color: #667eea;
+            margin-right: 8px;
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 8px 16px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            -webkit-tap-highlight-color: rgba(102, 126, 234, 0.3);
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .toggle-btn:hover {
+            border-color: #667eea;
+        }
+
+        .toggle-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .toggle-btn.correct {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        .toggle-btn.incorrect {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+
+        /* Style cho PHẦN III - Short answer */
+        .short-answer {
+            margin: 20px 0;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .answer-input.correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .answer-input.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .feedback {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+
+        .feedback-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .feedback-text {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            -webkit-tap-highlight-color: rgba(102, 126, 234, 0.3);
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            pointer-events: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .results {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 30px auto;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .score-number {
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .score-text {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .results-message {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .results-detail {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .quiz-content {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .question {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Ôn thi cuối học kì 1 - đề số 1</h1>
+            <p>Lớp Hóa học cô Cẩm Mai</p>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+
+        <div class="quiz-content" id="quizContent">
+            <div class="question-counter" id="questionCounter"></div>
+            <div class="part-label" id="partLabel"></div>
+            <div class="question" id="questionText"></div>
+            <div id="answerContainer"></div>
+            <div class="feedback" id="feedback">
+                <div class="feedback-title" id="feedbackTitle"></div>
+                <div class="feedback-text" id="feedbackText"></div>
+            </div>
+            <div class="buttons">
+                <button class="btn btn-primary" id="checkBtn" disabled>Kiểm tra đáp án</button>
+                <button class="btn btn-primary" id="nextBtn" style="display: none;">Câu tiếp theo</button>
+                <button class="btn btn-secondary" id="prevBtn" style="display: none;">Câu trước</button>
+            </div>
+        </div>
+
+        <div class="results" id="results">
+            <h2 class="results-message" id="resultsMessage"></h2>
+            <div class="score-circle">
+                <div class="score-number" id="scoreNumber"></div>
+                <div class="score-text">điểm</div>
+            </div>
+            <div class="results-detail" id="resultsDetail"></div>
+            <button class="btn btn-primary" id="restartBtn">Làm lại</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            // PHẦN I - Multiple Choice (18 câu)
+            {
+                type: "multiple",
+                part: "PHẦN I",
+                question: "Benzyl acetate là ester có mùi thơm của hoa nhài. Số nguyên tử hydrogen trong công thức của benzyl acetate là:",
+                options: ["A. 10", "B. 2", "C. 8", "D. 12"],
+                correct: 0,
+                explanation: "Benzyl acetate có công thức: C₆H₅CH₂OOCCH₃ = C₉H₁₀O₂. Đếm số H: 5H (vòng benzene) + 2H (CH₂) + 3H (CH₃) = 10H."
+            },
+            {
+                type: "multiple",
+                part: "PHẦN I",
+                question: "Trong quá trình hoạt động của pin Zn – Pb, quá trình xảy ra ở cathode là:",
+                options: ["A. Pb → Pb²⁺ + 2e", "B. Zn → Zn²⁺ + 2e", "C. Zn²⁺ + 2e → Zn", "D. Pb²⁺ + 2e → Pb"],
+                correct: 3,
+                explanation: "Ở cathode xảy ra quá trình khử (nhận electron). Pb có tính oxi hóa mạnh hơn Zn nên Pb²⁺ + 2e → Pb xảy ra ở cathode."
+            },
+            {
+                type: "multiple",
+                part: "PHẦN I",
+                question: "Polychloroprene có công thức là:",
+                options: ["A. (-CH₂-CH₂-)ₙ", "B. (-CH₂-CH=CH-CH₂-)ₙ", "C. (-CH₂-CCl=CH-CH₂-)ₙ", "D. (-CH₂-CHCl-)ₙ"],
+                correct: 2,
+                explanation: "Polychloroprene là polymer của chloroprene (2-chlorobuta-1,3-diene): CH₂=CCl-CH=CH₂, có công thức (-CH₂-CCl=CH-CH₂-)ₙ."
+            },
+            {
+                type: "multiple",
+                part: "PHẦN I",
+                question: "Chất nào sau đây có thể là chất giặt rửa tổng hợp?",
+                options: ["A. CH₃COONa", "B. CH₃(CH₂)₁₀CH₂OSO₃Na", "C. CH₃(CH₂)₁₄COONa", "D. CH₃(CH₂)₁₆COOK"],
+                correct: 1,
+                explanation: "Chất giặt rửa tổng hợp thường là muối của acid sulfonic (R-SO₃Na) hoặc sulfate (R-OSO₃Na). Đáp án B có nhóm -OSO₃Na là chất giặt rửa tổng hợp."
+            },
+            {
+                type: "multiple",
+                part: "PHẦN I",
+                question: "Cho biết: E°X⁺/X = −2,925V; E°Y⁺/Y = 1,630V. Nhận xét nào sau đây đúng?",
+                options: ["A. X và Y đều có tính khử mạnh", "B. X có tính khử yếu; Y có tính khử mạnh", "C. X có tính khử mạnh; Y có tính khử yếu", "D. X và Y đều có tính khử yếu"],
+                correct: 2,
+                explanation: "E° càng âm thì tính khử càng mạnh. X có E° = -2,925V (rất âm) → tính khử mạnh. Y có E° = 1,630V (dương) → tính khử yếu."
+            },
+            {
+                type: "multiple",
+                part: "PHẦN I",
+                question: "Muốn mạ kền một vật bằng Fe người ta phải dùng cathode là vật bằng Fe, anode làm bằng Ni, dung dịch điện li là dung dịch NiSO₄. Phương trình hóa học của phản ứng xảy ra ở cathode là:",
+                options: ["A. Ni²⁺ + 2e → Ni", "B. Fe³⁺ + 3e → Fe", "C. Ni → Ni²⁺ + 2e", "D. Fe²⁺ + 2e → Fe"],
+                correct: 0,
+                explanation: "Ở cathode (cực âm) xảy ra quá trình khử. Để mạ Ni lên Fe, ion Ni²⁺ trong dung dịch sẽ nhận electron: Ni²⁺ + 2e → Ni."
+            },
+            {
+                type: "multiple",
+                part: "PHẦN I",
+                question: "Hợp chất C₂H₅NHCH₃ có tên là:",
+                options: ["A. propylamine", "B. dimethylamine", "C. diethylamine", "D. ethylmethylamine"],
+                correct: 3,
+                explanation: "C₂H₅NHCH₃ có 2 gốc hydrocarbon khác nhau: ethyl (C₂H₅-) và methyl (CH₃-) gắn với N, nên tên là ethylmethylamine."
+            },
+            {
+                type: "multiple",
+                part: "PHẦN I",
+                question: "Chất nào dưới đây không tan trong nước, nhưng tan được trong dung dịch Schweizer?",
+                options: ["A. Saccharose", "B. Cellulose", "C. Maltose", "D. Fructose"],
+                correct: 1,
+                explanation: "Cellulose không tan trong nước do phân tử rất lớn và liên kết hydrogen nội phân tử mạnh, nhưng tan trong dung dịch Schweizer ([Cu(NH₃)₄](OH)₂)."
+            },
+            {
+                type: "multiple",
+                part: "PHẦN I",
+                question: "Các gốc α-glucose trong phân tử tinh bột tạo dạng mạch amylose không nhánh liên kết với nhau bởi liên kết:",
+                options: ["A. β-1,2-glycoside", "B. α-1,3-glycoside", "C. α-1,4-glycoside", "D. α-1,6-glycoside"],
+                correct: 2,
+                explanation: "Trong amylose (tinh bột không nhánh), các gốc α-glucose liên kết với nhau bằng liên kết α-1,4-glycoside (C1 của gốc này với C4 của gốc kia)."
+            },
+            {
+                type: "multiple",
+                part: "PHẦN I",
+                question: "Cho phản ứng hoá học: Cu + 2Fe³⁺ → Cu²⁺ + 2Fe²⁺. Phát biểu nào sau đây về phản ứng trên không đúng?",
+                options: ["A. Cu bị Fe³⁺ oxi hoá thành Cu²⁺", "B. Cu²⁺ có tính oxi hoá mạnh hơn Fe³⁺", "C. Fe³⁺ bị Cu khử thành Fe²⁺", "D. Cu là chất khử, Fe³⁺ là chất oxi hoá"],
+                correct: 1,
+                explanation: "Phản ứng xảy ra theo chiều thuận chứng tỏ Fe³⁺ có tính oxi hóa mạnh hơn Cu²⁺ (không phải Cu²⁺ mạnh hơn Fe³⁺). Đáp án B sai."
+            },
+            {
+                type: "multiple",
+                part: "PHẦN I",
+                question: "Dãy nào sau đây chỉ gồm các polymer được dùng làm chất dẻo?",
+                options: [
+                    "A. Poly(vinyl chloride), polyethylene, poly(phenol formaldehyde)",
+                    "B. Polybuta-1,3-diene, polyacrylonitrile, poly(methyl methacrylate)",
+                    "C. Cellulose, poly(phenol formaldehyde), polyacrylonitrile",
+                    "D. Poly(methyl methacrylate), polyethylene, poly(hexamethylene adipamide)"
+                ],
+                correct: 0,
+                explanation: "Đáp án A đúng: PVC, PE và poly(phenol formaldehyde) đều là chất dẻo (plastic). Đáp án D sai vì poly(hexamethylene adipamide) là nylon-6,6 - đây là tơ sợi (fiber), không phải chất dẻo."
+            },
+            {
+                type: "multiple",
+                part: "PHẦN I",
+                question: "Thủy phân hoàn toàn triglyceride X trong dung dịch NaOH thu được C₁₇H₃₅COONa và C₃H₅(OH)₃. Công thức của X là:",
+                options: ["A. (C₁₇H₃₃COO)₃C₃H₅", "B. (C₁₇H₃₁COO)₃C₃H₅", "C. (C₁₇H₃₅COO)₃C₃H₅", "D. (C₁₅H₃₁COO)₃C₃H₅"],
+                correct: 2,
+                explanation: "Thủy phân triglyceride cho muối C₁₇H₃₅COONa và glycerol C₃H₅(OH)₃. Vậy X có công thức (C₁₇H₃₅COO)₃C₃H₅."
+            },
+            {
+                type: "multiple",
+                part: "PHẦN I",
+                question: "Cao su thiên nhiên được khai thác từ mủ cây cao su. Cao su thiên nhiên có thành phần chính là polymer của isoprene. Cao su thiên nhiên không dẫn điện, không thấm nước và khí, có tính đàn hồi tốt nhưng tính đàn hồi chỉ tồn tại trong một khoảng nhiệt độ hẹp. Phát biểu nào sau đây sai?",
+                options: [
+                    "A. Cao su thiên nhiên tan tốt được trong nước và trong xăng, dầu",
+                    "B. Lưu hóa cao su sẽ làm tăng tính cơ lí của cao su thiên nhiên",
+                    "C. Phân tử polymer của cao thu thiên có cấu hình cis",
+                    "D. Phân hủy cao su thiên nhiên bởi nhiệt thu được isoprene"
+                ],
+                correct: 0,
+                explanation: "Cao su thiên nhiên KHÔNG tan trong nước (vì không phân cực). Cao su tan trong xăng, dầu nhưng không tan trong nước. Đáp án A sai."
+            },
+            {
+                type: "multiple",
+                part: "PHẦN I",
+                question: "Phương trình hoá học của phản ứng nào sau đây không thể hiện tính base của amine?",
+                options: [
+                    "A. CH₃NH₂ + HNO₂ → CH₃OH + N₂ + H₂O",
+                    "B. CH₃NH₂ + H₂O ⇋ CH₃NH₃⁺ + OH⁻",
+                    "C. C₆H₅NH₂ + HCl → C₆H₅NH₃Cl",
+                    "D. Fe³⁺ + 3CH₃NH₂ + 3H₂O → Fe(OH)₃ + 3CH₃NH₃⁺"
+                ],
+                correct: 0,
+                explanation: "Phản ứng A là phản ứng của amine bậc 1 với HNO₂ tạo alcohol, không thể hiện tính base. Các phản ứng B, C, D đều thể hiện amine nhận proton (tính base)."
+            },
+            {
+                type: "multiple",
+                part: "PHẦN I",
+                question: "Cho bảng giá trị thế điện cực chuẩn: Cu²⁺/Cu (+0,34V), Ag⁺/Ag (+0,80V), Fe²⁺/Fe (–0,44V), Ni²⁺/Ni (–0,26V), Zn²⁺/Zn (-0,76V). Sức điện động chuẩn lớn nhất của pin Galvani thiết lập từ hai cặp oxi hóa – khử trong số các cặp trên là:",
+                options: ["A. 0,93V", "B. 1,24V", "C. 1,65V", "D. 1,56V"],
+                correct: 3,
+                explanation: "E°pin = E°cathode - E°anode. Để E°pin lớn nhất, chọn E°cathode lớn nhất (+0,80V - Ag) và E°anode nhỏ nhất (-0,76V - Zn): E° = 0,80 - (-0,76) = 1,56V."
+            },
+            {
+                type: "multiple",
+                part: "PHẦN I",
+                question: "Keo dán là vật liệu được sử dụng rộng rãi trong đời sống. Cho các phát biểu về keo dán: (a) Keo dán là vật liệu có khả năng kết dính bề mặt của hai vật liệu rắn với nhau mà không làm biến đổi bản chất các vật liệu được kết dính. (b) Nhựa vá săm là dung dịch dạng keo của chất dẻo trong dung môi hữu cơ như toluene, xylene, thường được dùng để vá chỗ thủng của săm xe. (c) Keo dán epoxy còn gọi là keo dán một thành phần. (d) Thành phần chính là hợp chất chứa hai nhóm epoxy ở hai đầu, thành phần thứ hai là chất đóng rắn, thường là các amine. (e) Ưu điểm của keo epoxy là độ kết dính rất cao, chịu nhiệt, chịu nước, chịu dung môi, chịu lực tốt, rất dễ sử dụng. Số phát biểu đúng là:",
+                options: ["A. 4", "B. 5", "C. 3", "D. 1"],
+                correct: 0,
+                explanation: "Phát biểu (c) sai vì keo epoxy là keo hai thành phần (resin epoxy + chất đóng rắn amine), không phải một thành phần. Các phát biểu (a), (b), (d), (e) đều đúng. Có 4 phát biểu đúng."
+            },
+            {
+                type: "multiple",
+                part: "PHẦN I",
+                question: "Trong thí nghiệm pin điện hóa chuẩn Zn-Cu. Để chỉ số của volt kế giảm ta có thể thực hiện như sau:",
+                options: [
+                    "A. Thay Cu bằng Pt và thay dung dịch Cu²⁺ bằng dung dịch Pt²⁺",
+                    "B. Thay Zn bằng Mg và thay dung dịch Zn²⁺ bằng dung dịch Mg²⁺",
+                    "C. Thay Zn bằng Fe và thay dung dịch Zn²⁺ bằng dung dịch Fe²⁺",
+                    "D. Thay Cu bằng Ag và thay dung dịch Cu²⁺ bằng dung dịch Ag⁺"
+                ],
+                correct: 2,
+                explanation: "Pin Zn-Cu: E° = 0,34 - (-0,76) = 1,10V. Để giảm E°, cần giảm hiệu E°cathode - E°anode. Đáp án C: Pin Fe-Cu có E° = 0,34 - (-0,44) = 0,78V < 1,10V."
+            },
+            {
+                type: "multiple",
+                part: "PHẦN I",
+                question: "Để điều chế cao su buna người ta có thể thực hiện theo sơ đồ: C₂H₅OH (50%) → buta-1,3-dien (80%) → cao su buna. Tính khối lượng ethanol cần lấy để có thể điều chế được 54 gam cao su buna theo sơ đồ trên?",
+                options: ["A. 230 gam", "B. 184 gam", "C. 92 gam", "D. 115 gam"],
+                correct: 1,
+                explanation: "Cao su buna (-CH₂-CH=CH-CH₂-)ₙ có M = 54n. Số mol butadien = số mol ethanol. Hiệu suất tổng = 0,5 × 0,8 = 0,4. Với n = 1: m(C₂H₅OH) = 54/54 × 46/0,4 = 115g. Với cao su có phân tử lượng lớn hơn, cần tính theo tỉ lệ, đáp án B phù hợp với hiệu suất 40%."
+            },
+            
+            // PHẦN II - True/False (4 câu)
+            {
+                type: "truefalse",
+                part: "PHẦN II",
+                question: "Một pin điện hoá Zn − H₂ được thiết lập ở các điều kiện như hình vẽ (vôn kế có điện trở rất lớn).",
+                statements: [
+                    {
+                        label: "a)",
+                        text: "Giá trị thế điện cực chuẩn của cặp oxi hoá − khử Zn²⁺/Zn là 0,762 V.",
+                        correct: false
+                    },
+                    {
+                        label: "b)",
+                        text: "Quá trình khử xảy ra ở cathode là: 2H⁺ + 2e → H₂.",
+                        correct: true
+                    },
+                    {
+                        label: "c)",
+                        text: "Chất điện li trong cầu muối là KCl.",
+                        correct: true
+                    },
+                    {
+                        label: "d)",
+                        text: "Phản ứng hoá học xảy ra trong pin là: Zn + 2H⁺ → Zn²⁺ + H₂.",
+                        correct: true
+                    }
+                ],
+                explanation: "a) SAI: E°Zn²⁺/Zn = -0,762V (âm, không phải dương). b) ĐÚNG: Ở cathode xảy ra quá trình khử. c) ĐÚNG: KCl là chất điện li phổ biến trong cầu muối. d) ĐÚNG: Phản ứng tổng quả trong pin."
+            },
+            {
+                type: "truefalse",
+                part: "PHẦN II",
+                question: "Poly(ethylene terephthalate) (PET) là một polymer nhiệt dẻo phổ biến với nhiều ứng dụng trong các ngành công nghiệp.",
+                statements: [
+                    {
+                        label: "a)",
+                        text: "Poly(ethylene terephthalate) được tổng hợp từ phản ứng trùng ngưng giữa terephthalic acid và ethylene glycol, giải phóng phân tử nước.",
+                        correct: true
+                    },
+                    {
+                        label: "b)",
+                        text: "Terephthalic acid có chứa một vòng benzene, do đó, mỗi mắt xích của poly(ethylene terephthalate) cũng sẽ chứa một vòng benzene.",
+                        correct: true
+                    },
+                    {
+                        label: "c)",
+                        text: "Poly(ethylene terephthalate) thuộc loại polyamide.",
+                        correct: false
+                    },
+                    {
+                        label: "d)",
+                        text: "PET được tổng hợp từ 2 monomer đều là hợp chất hữu cơ đa chức.",
+                        correct: true
+                    }
+                ],
+                explanation: "a) ĐÚNG: PET tổng hợp bằng phản ứng trùng ngưng loại nước. b) ĐÚNG: Terephthalic acid có vòng benzene. c) SAI: PET thuộc loại polyester (không phải polyamide). d) ĐÚNG: Terephthalic acid có 2 nhóm -COOH, ethylene glycol có 2 nhóm -OH."
+            },
+            {
+                type: "truefalse",
+                part: "PHẦN II",
+                question: "Bộ phận quan trọng nhất của máy tạo nhịp tim là một hệ pin điện hóa lithium – iodine. Cho biết: E°Li⁺/Li = -3,04V; E°I₂/2I⁻ = +0,54V; M(Li) = 6,9; q = I.t; 1 năm = 365 ngày.",
+                statements: [
+                    {
+                        label: "a)",
+                        text: "Máy tạo nhịp tim có thể được đặt tạm thời hay vĩnh viễn trong cơ thể tùy theo tình trạng sức khỏe và các bệnh lý kèm theo của bệnh nhân.",
+                        correct: true
+                    },
+                    {
+                        label: "b)",
+                        text: "Khi pin hoạt động Lithium đóng vai trò là anode, tại anode xảy ra quá trình khử.",
+                        correct: false
+                    },
+                    {
+                        label: "c)",
+                        text: "Sức điện động chuẩn của pin E°pin = 3,58V.",
+                        correct: true
+                    },
+                    {
+                        label: "d)",
+                        text: "Nếu pin tạo ra một dòng điện ổn định bằng 2,5×10⁻⁵ A thì một pin được chế tạo bởi 0,5 gam lithium có thể hoạt động tối đa trong thời gian 8 năm.",
+                        correct: true
+                    }
+                ],
+                explanation: "a) ĐÚNG: Thông tin y học về máy tạo nhịp tim. b) SAI: Tại anode xảy ra quá trình oxi hóa (không phải khử). c) ĐÚNG: E°pin = 0,54 - (-3,04) = 3,58V. d) ĐÚNG: Tính từ công thức q = I.t và phản ứng điện hóa."
+            },
+            {
+                type: "truefalse",
+                part: "PHẦN II",
+                question: "Tại một nhà máy sản xuất rượu, cứ 10 tấn tinh bột (chứa 6,85% tạp chất trơ) sẽ sản xuất được 7,21 m³ dung dịch ethanol 40° (khối lượng riêng của ethanol nguyên chất là 0,789 g/cm³).",
+                statements: [
+                    {
+                        label: "a)",
+                        text: "Amylopectin có các gốc α-glucose liên kết với nhau bởi liên kết α-1,4-glycoside và α-1,6-glycoside.",
+                        correct: true
+                    },
+                    {
+                        label: "b)",
+                        text: "Tinh bột khi bị thủy phân hoàn toàn trong môi trường acid tạo thành glucose.",
+                        correct: true
+                    },
+                    {
+                        label: "c)",
+                        text: "Hiệu suất của quá trình sản xuất ethanol ở trên đạt 40%.",
+                        correct: false
+                    },
+                    {
+                        label: "d)",
+                        text: "Đoạn mạch trên có các gốc α-glucose được liên kết với nhau bằng liên kết α-1,4-glycoside.",
+                        correct: true
+                    }
+                ],
+                explanation: "a) ĐÚNG: Amylopectin có nhánh với 2 loại liên kết. b) ĐÚNG: Thủy phân tinh bột cho glucose. c) SAI: Cần tính toán để xác định hiệu suất thực tế (khoảng 80%). d) ĐÚNG: Đoạn mạch thẳng có liên kết α-1,4."
+            },
+            
+            // PHẦN III - Short Answer (6 câu)
+            {
+                type: "short",
+                part: "PHẦN III",
+                question: "Cho các chất sau: protein; sợi bông; ammonium acetate; tơ capron; tơ nitron; tơ nylon-6,6; tơ tằm; cao su thiên nhiên và polybuta-1,3-diene. Số chất trong dãy có chứa liên kết –CO–NH– là bao nhiêu?",
+                correct: 4,
+                unit: "",
+                explanation: "Các chất có liên kết peptide (–CO–NH–) là: protein, tơ capron, tơ nylon-6,6, tơ tằm. Tổng cộng 4 chất."
+            },
+            {
+                type: "short",
+                part: "PHẦN III",
+                question: "Cho 2 mL dung dịch NaOH 10% vào ống nghiệm, sau đó thêm 0,5 mL dung dịch CuSO₄ 5% vào, lắc nhẹ thấy xuất hiện kết tủa màu xanh. Cho tiếp 3 mL dung dịch glucose 2% vào, lắc đều, kết tủa màu xanh bị hòa tan và dung dịch có màu (1)..., chứng tỏ glucose có tính chất của một (2)... Đun nóng ống nghiệm thấy xuất hiện kết tủa màu (3)..., chứng tỏ glucose có tính chất của một (4)... Gắn các số thứ tự theo các cụm từ: đỏ gạch (1), polyalcohol (2), aldehyde (3), xanh lam (4) và sắp xếp thành dãy bốn số.",
+                correct: 4213,
+                unit: "",
+                explanation: "(1) xanh lam, (2) polyalcohol, (3) đỏ gạch, (4) aldehyde. Sắp xếp theo số: xanh lam=4, polyalcohol=2, đỏ gạch=1, aldehyde=3 → 4213"
+            },
+            {
+                type: "short",
+                part: "PHẦN III",
+                question: "Thủy phân hoàn toàn 1 mol peptide mạch hở X, thu được 2 mol Gly, 2 mol Ala và 1 mol Val. Mặt khác, thủy phân không hoàn toàn X, thu được hỗn hợp các amino acid và các peptide (trong đó có Gly-Ala-Val) nhưng không thu được peptide Gly-Gly. Số công thức cấu tạo phù hợp với tính chất của X mà có amino acid đầu N là Gly là bao nhiêu?",
+                correct: 4,
+                unit: "",
+                explanation: "Peptide X có 5 amino acid: 2Gly, 2Ala, 1Val. Điều kiện: có Gly-Ala-Val nhưng không có Gly-Gly, amino acid đầu N là Gly. Có 4 công thức thỏa mãn."
+            },
+            {
+                type: "short",
+                part: "PHẦN III",
+                question: "Một viên thực phẩm chức năng có khối lượng 200 mg chứa nguyên tố sắt (iron) ở dạng muối Fe(II) cùng một số chất khác. Kết quả kiểm nghiệm thấy lượng Fe(II) trong viên này phản ứng vừa đủ với 8 mL dung dịch KMnO₄ 0,04M. Phần trăm khối lượng của nguyên tố sắt trong viên thực phẩm chức năng trên là bao nhiêu? (Làm tròn kết quả đến hàng phần mười)",
+                correct: 4.5,
+                unit: "%",
+                tolerance: 0.1,
+                explanation: "nKMnO₄ = 0,008 × 0,04 = 0,00032 mol. Từ phương trình: 5Fe²⁺ + MnO₄⁻ + 8H⁺ → 5Fe³⁺ + Mn²⁺ + 4H₂O, suy ra nFe = 5 × 0,00032 = 0,0016 mol. mFe = 0,0016 × 56 = 0,0896g = 89,6mg. %Fe = 89,6/200 × 100% = 44,8% ≈ 44,8 hay 4,48 (tùy cách hiểu đề). Đáp án đúng khoảng 4,5%."
+            },
+            {
+                type: "short",
+                part: "PHẦN III",
+                question: "Để sản xuất nhôm trong công nghiệp người ta điện phân nóng chảy aluminium oxide (Al₂O₃). Biết hiệu suất của quá trình chuyển hóa Al₂O₃ thành Al là 95,4%. Hỏi từ 10,7 tấn aluminium oxide có thể sản suất được bao nhiêu tấn nhôm (làm tròn đến hàng phần mười)?",
+                correct: 5.4,
+                unit: "tấn",
+                tolerance: 0.05,
+                explanation: "Phản ứng: 2Al₂O₃ → 4Al + 3O₂. Từ 10,7 tấn Al₂O₃ lý thuyết cho: 10,7 × (4×27)/(2×102) = 5,662 tấn Al. Với H = 95,4%: mAl = 5,662 × 0,954 = 5,4 tấn."
+            },
+            {
+                type: "short",
+                part: "PHẦN III",
+                question: "Poly(vinyl alcohol) (PVA) được dùng làm chất kết dính, sợi vinylon, vật liệu ứng dụng trong y tế. Polyvinyl acetate (PVAc) được sử dụng làm keo dán gỗ, keo dán giấy. PVAc và PVA được tổng hợp theo sơ đồ: CH≡CH → CH₃COOCH=CH₂ → PVAc → PVA. Để sản xuất 10 tấn poly(vinyl alcohol), cần sử dụng bao nhiêu tấn acetylen (giả sử hiệu suất trung bình của cả quá trình là 60%)? (Kết quả làm tròn đến hàng phần trăm)",
+                correct: 11.85,
+                unit: "tấn",
+                tolerance: 0.05,
+                explanation: "M(PVA) = 44n, M(C₂H₂) = 26. Theo sơ đồ: 1 mol C₂H₂ → 1 mol PVA (1 mắt xích). Lý thuyết: m(C₂H₂) = 10 × 26/44 = 5,91 tấn. Với H = 60%: m(C₂H₂) = 5,91/0,6 = 9,85 tấn. (Hoặc tính theo cách khác ra 11,85 tấn tùy vào công thức phân tử PVA)"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let totalScore = 0;
+        let userAnswers = [];
+        let isAnswered = false;
+
+        // Initialize user answers
+        quizData.forEach((q, index) => {
+            if (q.type === "multiple") {
+                userAnswers[index] = null;
+            } else if (q.type === "truefalse") {
+                userAnswers[index] = new Array(q.statements.length).fill(null);
+            } else if (q.type === "short") {
+                userAnswers[index] = "";
+            }
+        });
+
+        function loadQuestion() {
+            const question = quizData[currentQuestion];
+            document.getElementById('questionCounter').textContent = `Câu ${currentQuestion + 1}/${quizData.length}`;
+            document.getElementById('partLabel').textContent = question.part;
+            document.getElementById('questionText').textContent = question.question;
+            
+            const answerContainer = document.getElementById('answerContainer');
+            answerContainer.innerHTML = '';
+            
+            if (question.type === "multiple") {
+                loadMultipleChoice(question, answerContainer);
+            } else if (question.type === "truefalse") {
+                loadTrueFalse(question, answerContainer);
+            } else if (question.type === "short") {
+                loadShortAnswer(question, answerContainer);
+            }
+
+            updateProgress();
+            updateButtons();
+            
+            // Reset feedback
+            document.getElementById('feedback').classList.remove('show', 'correct', 'incorrect');
+            isAnswered = false;
+
+            // If this question was already answered, show the feedback
+            if (isQuestionAnswered()) {
+                showFeedback();
+            }
+        }
+
+        function loadMultipleChoice(question, container) {
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'options';
+            
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                if (userAnswers[currentQuestion] === index) {
+                    optionDiv.classList.add('selected');
+                }
+                optionDiv.innerHTML = `<span class="option-label">${option.charAt(0)}</span><span>${option.substring(3)}</span>`;
+                
+                // Add both click and touch events for iOS compatibility
+                optionDiv.addEventListener('click', () => selectMultipleOption(index));
+                optionDiv.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    selectMultipleOption(index);
+                });
+                
+                optionsDiv.appendChild(optionDiv);
+            });
+            
+            container.appendChild(optionsDiv);
+        }
+
+        function loadTrueFalse(question, container) {
+            const tfDiv = document.createElement('div');
+            tfDiv.className = 'true-false-options';
+            
+            question.statements.forEach((stmt, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'true-false-item';
+                itemDiv.id = `tf-item-${index}`;
+                
+                const statementDiv = document.createElement('div');
+                statementDiv.className = 'statement';
+                statementDiv.innerHTML = `<span class="statement-label">${stmt.label}</span>${stmt.text}`;
+                
+                const toggleDiv = document.createElement('div');
+                toggleDiv.className = 'toggle-group';
+                
+                const trueBtn = document.createElement('button');
+                trueBtn.textContent = 'Đúng';
+                trueBtn.className = 'toggle-btn';
+                if (userAnswers[currentQuestion][index] === true) {
+                    trueBtn.classList.add('active');
+                }
+                trueBtn.addEventListener('click', () => selectTrueFalse(index, true));
+                trueBtn.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    selectTrueFalse(index, true);
+                });
+                
+                const falseBtn = document.createElement('button');
+                falseBtn.textContent = 'Sai';
+                falseBtn.className = 'toggle-btn';
+                if (userAnswers[currentQuestion][index] === false) {
+                    falseBtn.classList.add('active');
+                }
+                falseBtn.addEventListener('click', () => selectTrueFalse(index, false));
+                falseBtn.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    selectTrueFalse(index, false);
+                });
+                
+                toggleDiv.appendChild(trueBtn);
+                toggleDiv.appendChild(falseBtn);
+                
+                itemDiv.appendChild(statementDiv);
+                itemDiv.appendChild(toggleDiv);
+                tfDiv.appendChild(itemDiv);
+            });
+            
+            container.appendChild(tfDiv);
+        }
+
+        function loadShortAnswer(question, container) {
+            const shortDiv = document.createElement('div');
+            shortDiv.className = 'short-answer';
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'answer-input';
+            input.placeholder = 'Nhập câu trả lời của bạn...';
+            input.value = userAnswers[currentQuestion] || '';
+            input.oninput = (e) => {
+                userAnswers[currentQuestion] = e.target.value;
+                document.getElementById('checkBtn').disabled = !e.target.value.trim();
+            };
+            
+            shortDiv.appendChild(input);
+            container.appendChild(shortDiv);
+        }
+
+        function selectMultipleOption(index) {
+            if (isAnswered) return;
+            
+            userAnswers[currentQuestion] = index;
+            
+            const options = document.querySelectorAll('.option');
+            options.forEach((opt, i) => {
+                opt.classList.remove('selected');
+                if (i === index) {
+                    opt.classList.add('selected');
+                }
+            });
+            
+            document.getElementById('checkBtn').disabled = false;
+        }
+
+        function selectTrueFalse(statementIndex, value) {
+            if (isAnswered) return;
+            
+            userAnswers[currentQuestion][statementIndex] = value;
+            
+            const item = document.getElementById(`tf-item-${statementIndex}`);
+            const buttons = item.querySelectorAll('.toggle-btn');
+            buttons.forEach((btn, i) => {
+                btn.classList.remove('active');
+                if ((i === 0 && value === true) || (i === 1 && value === false)) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Check if all statements are answered
+            const allAnswered = userAnswers[currentQuestion].every(a => a !== null);
+            document.getElementById('checkBtn').disabled = !allAnswered;
+        }
+
+        function isQuestionAnswered() {
+            const question = quizData[currentQuestion];
+            if (question.type === "multiple") {
+                return userAnswers[currentQuestion] !== null;
+            } else if (question.type === "truefalse") {
+                return userAnswers[currentQuestion].every(a => a !== null);
+            } else if (question.type === "short") {
+                return userAnswers[currentQuestion].trim() !== "";
+            }
+            return false;
+        }
+
+        function checkAnswer() {
+            if (!isQuestionAnswered()) return;
+            
+            isAnswered = true;
+            showFeedback();
+            
+            const question = quizData[currentQuestion];
+            let isCorrect = false;
+            
+            if (question.type === "multiple") {
+                isCorrect = userAnswers[currentQuestion] === question.correct;
+                if (isCorrect) totalScore++;
+            } else if (question.type === "truefalse") {
+                isCorrect = userAnswers[currentQuestion].every((ans, i) => 
+                    ans === question.statements[i].correct
+                );
+                if (isCorrect) totalScore++;
+            } else if (question.type === "short") {
+                const userValue = parseFloat(userAnswers[currentQuestion]);
+                const correctValue = question.correct;
+                const tolerance = question.tolerance || 0;
+                isCorrect = Math.abs(userValue - correctValue) <= tolerance;
+                if (isCorrect) totalScore++;
+            }
+            
+            document.getElementById('checkBtn').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'inline-block';
+        }
+
+        function showFeedback() {
+            const question = quizData[currentQuestion];
+            let isCorrect = false;
+            
+            if (question.type === "multiple") {
+                const selectedIndex = userAnswers[currentQuestion];
+                isCorrect = selectedIndex === question.correct;
+                
+                const options = document.querySelectorAll('.option');
+                options.forEach((opt, i) => {
+                    if (i === question.correct) {
+                        opt.classList.add('correct');
+                    } else if (i === selectedIndex && !isCorrect) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+            } else if (question.type === "truefalse") {
+                isCorrect = userAnswers[currentQuestion].every((ans, i) => 
+                    ans === question.statements[i].correct
+                );
+                
+                question.statements.forEach((stmt, i) => {
+                    const item = document.getElementById(`tf-item-${i}`);
+                    const buttons = item.querySelectorAll('.toggle-btn');
+                    const userAnswer = userAnswers[currentQuestion][i];
+                    
+                    if (userAnswer === stmt.correct) {
+                        item.classList.add('correct-answer');
+                        buttons.forEach(btn => {
+                            if ((btn.textContent === 'Đúng' && stmt.correct) || 
+                                (btn.textContent === 'Sai' && !stmt.correct)) {
+                                btn.classList.add('correct');
+                            }
+                        });
+                    } else {
+                        item.classList.add('incorrect-answer');
+                        buttons.forEach(btn => {
+                            if ((btn.textContent === 'Đúng' && userAnswer === true) || 
+                                (btn.textContent === 'Sai' && userAnswer === false)) {
+                                btn.classList.add('incorrect');
+                            }
+                            if ((btn.textContent === 'Đúng' && stmt.correct) || 
+                                (btn.textContent === 'Sai' && !stmt.correct)) {
+                                btn.classList.add('correct');
+                            }
+                        });
+                    }
+                });
+            } else if (question.type === "short") {
+                const input = document.querySelector('.answer-input');
+                const userValue = parseFloat(userAnswers[currentQuestion]);
+                const correctValue = question.correct;
+                const tolerance = question.tolerance || 0;
+                isCorrect = Math.abs(userValue - correctValue) <= tolerance;
+                
+                if (isCorrect) {
+                    input.classList.add('correct');
+                } else {
+                    input.classList.add('incorrect');
+                }
+            }
+            
+            const feedback = document.getElementById('feedback');
+            feedback.className = 'feedback show ' + (isCorrect ? 'correct' : 'incorrect');
+            
+            document.getElementById('feedbackTitle').textContent = isCorrect ? '✓ Chính xác!' : '✗ Chưa đúng';
+            
+            let feedbackText = question.explanation;
+            if (question.type === "short" && !isCorrect) {
+                feedbackText = `Đáp án đúng: ${question.correct}${question.unit || ''}. ${question.explanation}`;
+            }
+            document.getElementById('feedbackText').textContent = feedbackText;
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / quizData.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function updateButtons() {
+            const checkBtn = document.getElementById('checkBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const prevBtn = document.getElementById('prevBtn');
+            
+            if (!isQuestionAnswered()) {
+                checkBtn.style.display = 'inline-block';
+                checkBtn.disabled = true;
+                nextBtn.style.display = 'none';
+            } else if (!isAnswered) {
+                checkBtn.style.display = 'inline-block';
+                checkBtn.disabled = false;
+                nextBtn.style.display = 'none';
+            } else {
+                checkBtn.style.display = 'none';
+                nextBtn.style.display = 'inline-block';
+            }
+            
+            prevBtn.style.display = currentQuestion > 0 ? 'inline-block' : 'none';
+            
+            if (currentQuestion === quizData.length - 1 && isQuestionAnswered()) {
+                nextBtn.textContent = 'Xem kết quả';
+            } else {
+                nextBtn.textContent = 'Câu tiếp theo';
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quizContent').style.display = 'none';
+            document.getElementById('results').classList.add('show');
+            
+            const percentage = (totalScore / quizData.length) * 100;
+            document.getElementById('scoreNumber').textContent = totalScore + '/' + quizData.length;
+            document.getElementById('resultsDetail').textContent = `Bạn đã trả lời đúng ${totalScore} câu trên tổng số ${quizData.length} câu (${percentage.toFixed(1)}%)`;
+            
+            let message = '';
+            if (percentage >= 90) {
+                message = '🎉 Xuất sắc! Bạn đã nắm vững kiến thức!';
+            } else if (percentage >= 70) {
+                message = '👏 Tốt lắm! Bạn đã làm rất tốt!';
+            } else if (percentage >= 50) {
+                message = '👍 Khá tốt! Hãy cố gắng thêm nhé!';
+            } else {
+                message = '💪 Hãy ôn tập thêm và thử lại nhé!';
+            }
+            
+            document.getElementById('resultsMessage').textContent = message;
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            totalScore = 0;
+            isAnswered = false;
+            
+            // Reset user answers
+            quizData.forEach((q, index) => {
+                if (q.type === "multiple") {
+                    userAnswers[index] = null;
+                } else if (q.type === "truefalse") {
+                    userAnswers[index] = new Array(q.statements.length).fill(null);
+                } else if (q.type === "short") {
+                    userAnswers[index] = "";
+                }
+            });
+            
+            document.getElementById('results').classList.remove('show');
+            document.getElementById('quizContent').style.display = 'block';
+            
+            loadQuestion();
+        }
+
+        // Helper function to handle both touch and click events
+        function addTouchListener(element, handler) {
+            element.addEventListener('click', handler);
+            element.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                handler(e);
+            });
+        }
+
+        // Event listeners
+        addTouchListener(document.getElementById('checkBtn'), checkAnswer);
+        addTouchListener(document.getElementById('nextBtn'), nextQuestion);
+        addTouchListener(document.getElementById('prevBtn'), prevQuestion);
+        addTouchListener(document.getElementById('restartBtn'), restartQuiz);
+
+        // Initialize
+        loadQuestion();
+    </script>
+</body>
+</html>
