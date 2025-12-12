@@ -87,7 +87,8 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>HTML Uploader | Studygram</title>
+        <title>HTML Uploader | Yuki</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎉</text></svg>" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="Upload và chia sẻ file HTML dễ dàng" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -219,7 +220,7 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="footer">
-          <p>Made with 💖 by <span className="hl-yellow">Studygram</span></p>
+          <p>Made with 💖 by <span className="hl-yellow">Yuki</span></p>
         </footer>
       </div>
 
