@@ -9,13 +9,14 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [files, setFiles] = useState([]);
   const [loadingFiles, setLoadingFiles] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile && selectedFile.type === 'text/html') {
       setFile(selectedFile);
       setError(null);
-    } else {
+    } else if (selectedFile) {
       setError('Vui lòng chọn file HTML');
       setFile(null);
     }
@@ -73,6 +74,12 @@ export default function Home() {
     }
   };
 
+  const copyToClipboard = (url) => {
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   useEffect(() => {
     loadFiles();
   }, []);
@@ -80,8 +87,9 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>HTML Uploader</title>
+        <title>HTML Uploader | Studygram</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="Upload và chia sẻ file HTML dễ dàng" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
         <link
@@ -90,13 +98,23 @@ export default function Home() {
         />
       </Head>
 
-      <div className="container">
-        <div className="main-card">
-          <h1 className="title">HTML Uploader</h1>
-          <p className="subtitle">Upload và chia sẻ file HTML của bạn</p>
+      <div className="page-container">
+        {/* Header */}
+        <header className="header">
+          <h1 className="logo">HTML Uploader</h1>
+          <p className="tagline">Upload & Chia sẻ file HTML</p>
+        </header>
 
-          <div className="upload-section">
-            <div className="file-input-wrapper">
+        {/* Upload Card */}
+        <main className="main-content">
+          <div className="upload-card hand-card">
+            <div className="washi-tape"></div>
+
+            <h2 className="card-title">
+              <span className="hl-pink">📤 Upload File</span>
+            </h2>
+
+            <div className="upload-area">
               <input
                 id="fileInput"
                 type="file"
@@ -104,390 +122,470 @@ export default function Home() {
                 onChange={handleFileChange}
                 className="file-input"
               />
-              <label htmlFor="fileInput" className="file-label hand-card">
-                {file ? (
-                  <span>
-                    📄 <span className="hl-yellow">{file.name}</span>
-                  </span>
-                ) : (
-                  '📁 Chọn file HTML'
-                )}
+              <label htmlFor="fileInput" className="file-label">
+                <div className="file-icon">📁</div>
+                <span className="file-text">
+                  {file ? file.name : 'Chọn file HTML'}
+                </span>
+                <span className="file-hint">hoặc kéo thả vào đây</span>
               </label>
             </div>
 
             <button
               onClick={handleUpload}
               disabled={!file || uploading}
-              className={`upload-btn hand-card ${uploading || !file ? 'disabled' : ''}`}
+              className={`upload-btn ${uploading || !file ? 'disabled' : ''}`}
             >
-              {uploading ? '⏳ Đang upload...' : '✨ Upload ngay'}
+              {uploading ? (
+                <><span className="spinner"></span> Đang upload...</>
+              ) : (
+                '✨ Upload ngay'
+              )}
             </button>
+
+            {/* Error Message */}
+            {error && (
+              <div className="message error-msg">
+                <span>⚠️</span> {error}
+              </div>
+            )}
+
+            {/* Success Message */}
+            {uploadedUrl && (
+              <div className="message success-msg">
+                <span className="scribble-underline">✅ Upload thành công!</span>
+                <div className="url-container">
+                  <input
+                    type="text"
+                    value={uploadedUrl}
+                    readOnly
+                    className="url-input"
+                  />
+                  <button onClick={() => copyToClipboard(uploadedUrl)} className="copy-btn">
+                    {copied ? '✓' : '📋'}
+                  </button>
+                </div>
+                <a href={uploadedUrl} target="_blank" rel="noopener noreferrer" className="view-link">
+                  Xem file →
+                </a>
+              </div>
+            )}
           </div>
 
-          {error && (
-            <div className="error-note sticky-note" style={{ transform: 'rotate(1deg)' }}>
-              <span className="scribble-underline">⚠️ Lỗi</span>
-              <p>{error}</p>
-            </div>
-          )}
-
-          {uploadedUrl && (
-            <div className="success-note sticky-note" style={{ transform: 'rotate(-1deg)' }}>
-              <span className="scribble-underline">✅ Upload thành công!</span>
-              <div className="url-box">
-                <a
-                  href={uploadedUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="url-link"
-                >
-                  {uploadedUrl}
-                </a>
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(uploadedUrl);
-                    alert('Đã copy URL! 📋');
-                  }}
-                  className="copy-btn hand-card"
-                >
-                  📋 Copy URL
-                </button>
-              </div>
-            </div>
-          )}
-
-          <div className="files-section">
-            <div className="files-header">
+          {/* Files List */}
+          <section className="files-section">
+            <div className="section-header">
               <h2 className="section-title">
-                <span className="hl-pink">📋 Files đã upload</span>
+                <span className="hl-blue">📋 Files đã upload</span>
               </h2>
-              <button onClick={loadFiles} className="refresh-btn hand-card">
+              <button onClick={loadFiles} className="refresh-btn" title="Làm mới">
                 🔄
               </button>
             </div>
 
             {loadingFiles ? (
-              <p className="loading-text">Đang tải...</p>
+              <div className="loading-state">
+                <span className="spinner"></span>
+                <p>Đang tải...</p>
+              </div>
             ) : files.length === 0 ? (
-              <p className="no-files">Chưa có file nào</p>
+              <div className="empty-state">
+                <div className="empty-icon">📝</div>
+                <p>Chưa có file nào</p>
+                <span>Upload file HTML đầu tiên của bạn!</span>
+              </div>
             ) : (
-              <div className="files-list">
+              <div className="files-grid">
                 {files.map((file, index) => (
-                  <div
+                  <a
                     key={index}
-                    className="file-item sticky-note"
-                    style={{
-                      transform: `rotate(${(index % 2 === 0 ? 1 : -1) * (index % 3) * 0.5}deg)`,
-                    }}
+                    href={`/view/${encodeURIComponent(file.filename)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="file-card sticky-note"
+                    style={{ '--rotate': `${(index % 2 === 0 ? 1 : -1) * (1 + (index % 3) * 0.5)}deg` }}
                   >
-                    <a
-                      href={`/view/${encodeURIComponent(file.filename)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="file-link"
-                    >
-                      <span className="hl-blue">{file.filename}</span>
-                    </a>
-                    <span className="file-date">
-                      {new Date(file.uploadedAt).toLocaleString('vi-VN')}
+                    <div className="file-card-icon">📄</div>
+                    <span className="file-card-name">{file.filename}</span>
+                    <span className="file-card-date">
+                      {new Date(file.uploadedAt).toLocaleDateString('vi-VN')}
                     </span>
-                  </div>
+                  </a>
                 ))}
               </div>
             )}
-          </div>
-        </div>
+          </section>
+        </main>
+
+        {/* Footer */}
+        <footer className="footer">
+          <p>Made with 💖 by <span className="hl-yellow">Studygram</span></p>
+        </footer>
       </div>
 
       <style jsx>{`
-        .container {
+        /* ===== BASE STYLES ===== */
+        .page-container {
           min-height: 100vh;
           scroll-behavior: smooth;
-          background-color: #fff7ea;
+          background-color: #FFF7EA;
           background-image: url('https://www.transparenttextures.com/patterns/lined-paper-2.png');
-          padding: 40px 20px;
           font-family: 'Patrick Hand', system-ui, sans-serif;
-          color: #1f2937;
+          color: #1F2937;
           text-rendering: optimizeLegibility;
           letter-spacing: 0.01em;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
         }
 
-        .main-card {
-          max-width: 800px;
-          margin: 0 auto;
-          position: relative;
-          background-color: #fffaf3;
-          border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-          border: 3px solid #1f2937;
-          padding: 50px 40px;
-          box-shadow: 8px 8px 0px #000000, 0 0 0 4px #fffaf3;
-          transform: rotate(-0.5deg);
+        /* ===== HEADER ===== */
+        .header {
+          text-align: center;
+          margin-bottom: 24px;
+          padding: 16px;
         }
 
-        .title {
+        .logo {
           font-family: 'Pacifico', cursive;
           font-weight: 400;
-          font-size: clamp(2.5rem, 5vw, 3.5rem);
+          font-size: clamp(2rem, 6vw, 2.8rem);
           background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
           -webkit-background-clip: text;
           background-clip: text;
           color: transparent;
-          text-shadow: 2px 2px 4px rgba(255, 107, 107, 0.2);
-          text-align: center;
-          margin-bottom: 15px;
-          transform: rotate(0.5deg);
+          text-shadow: 2px 2px 4px rgba(255, 107, 107, 0.15);
+          margin: 0;
         }
 
-        .subtitle {
+        .tagline {
           font-family: 'Mali', cursive;
-          font-size: 1.2rem;
-          color: #4b5563;
-          text-align: center;
-          margin-bottom: 40px;
-          transform: rotate(-0.3deg);
+          font-size: 1rem;
+          color: #4B5563;
+          margin: 8px 0 0;
         }
 
-        .upload-section {
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+          width: 100%;
+          max-width: 480px;
           display: flex;
           flex-direction: column;
-          gap: 20px;
-          margin-bottom: 30px;
+          gap: 24px;
         }
 
-        .file-input-wrapper {
+        /* ===== HAND CARD ===== */
+        .hand-card {
           position: relative;
+          border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+          border: 3px solid #1F2937;
+          background-color: #FFFAF3;
+          box-shadow: 5px 5px 0px #000000;
+          padding: 28px 20px 24px;
+        }
+
+        .washi-tape {
+          position: absolute;
+          top: -12px;
+          left: 50%;
+          transform: translateX(-50%) rotate(-1deg);
+          width: 80px;
+          height: 22px;
+          background-color: rgba(255, 100, 100, 0.35);
+          border-radius: 2px;
+        }
+
+        .card-title {
+          font-family: 'Mali', cursive;
+          font-size: 1.3rem;
+          font-weight: 700;
+          text-align: center;
+          margin: 0 0 20px;
+        }
+
+        /* ===== FILE INPUT ===== */
+        .upload-area {
+          position: relative;
+          margin-bottom: 16px;
         }
 
         .file-input {
           position: absolute;
-          opacity: 0;
           width: 100%;
           height: 100%;
+          opacity: 0;
           cursor: pointer;
           z-index: 2;
         }
 
         .file-label {
-          display: block;
-          padding: 20px;
-          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          padding: 24px 16px;
+          border: 2px dashed #D7C2A8;
+          border-radius: 12px;
+          background: #FFF7EA;
           cursor: pointer;
-          transition: all 0.3s ease;
-          font-family: 'Mali', cursive;
-          font-size: 1.1rem;
-          font-weight: 600;
-          color: #0369a1;
+          transition: all 0.2s ease;
         }
 
         .file-label:hover {
-          transform: scale(1.02) rotate(0deg) !important;
+          border-color: #0369A1;
+          background: #f0f9ff;
         }
 
-        .upload-btn {
-          padding: 18px 35px;
-          background-color: #fffaf3;
-          color: #1f2937;
-          border: 3px solid #1f2937;
+        .file-icon {
+          font-size: 2rem;
+        }
+
+        .file-text {
           font-family: 'Mali', cursive;
-          font-size: 1.2rem;
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: #0369A1;
+        }
+
+        .file-hint {
+          font-size: 0.85rem;
+          color: #4B5563;
+        }
+
+        /* ===== UPLOAD BUTTON ===== */
+        .upload-btn {
+          width: 100%;
+          padding: 14px 24px;
+          background-color: #FFFAF3;
+          color: #1F2937;
+          border: 3px solid #1F2937;
+          border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+          font-family: 'Mali', cursive;
+          font-size: 1.15rem;
           font-weight: 700;
           cursor: pointer;
-          transition: all 0.3s ease;
-          box-shadow: 6px 6px 0px #000000;
-          transform: rotate(0.3deg);
+          box-shadow: 4px 4px 0px #000000;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
         }
 
         .upload-btn:hover:not(.disabled) {
-          transform: scale(1.05) rotate(0deg) !important;
-          box-shadow: 8px 8px 0px #000000;
+          transform: translateY(-2px);
+          box-shadow: 6px 6px 0px #000000;
+        }
+
+        .upload-btn:active:not(.disabled) {
+          transform: translateY(0);
+          box-shadow: 2px 2px 0px #000000;
         }
 
         .upload-btn.disabled {
           opacity: 0.5;
           cursor: not-allowed;
-          transform: rotate(0deg);
         }
 
-        .error-note {
-          background-color: #fff9c4;
-          border: 2px solid #be123c;
-          color: #1f2937;
-          margin-bottom: 25px;
+        /* ===== SPINNER ===== */
+        .spinner {
+          width: 18px;
+          height: 18px;
+          border: 2px solid #D7C2A8;
+          border-top-color: #1F2937;
+          border-radius: 50%;
+          animation: spin 0.8s linear infinite;
         }
 
-        .success-note {
-          background-color: #fff9c4;
-          border: 2px solid #0369a1;
-          color: #1f2937;
-          margin-bottom: 25px;
+        @keyframes spin {
+          to { transform: rotate(360deg); }
         }
 
-        .url-box {
-          margin-top: 15px;
+        /* ===== MESSAGES ===== */
+        .message {
+          margin-top: 16px;
+          padding: 16px;
+          border-radius: 12px;
+          font-family: 'Mali', cursive;
+        }
+
+        .error-msg {
+          background: #FEE2E2;
+          border: 2px solid #BE123C;
+          color: #BE123C;
+        }
+
+        .success-msg {
+          background: #FFF9C4;
+          border: 2px solid #0369A1;
+        }
+
+        .url-container {
           display: flex;
-          flex-direction: column;
-          gap: 12px;
+          gap: 8px;
+          margin-top: 12px;
         }
 
-        .url-link {
-          color: #0369a1;
-          word-break: break-all;
-          text-decoration: underline;
+        .url-input {
+          flex: 1;
+          padding: 10px 12px;
+          border: 2px solid #D7C2A8;
+          border-radius: 8px;
           font-family: 'Patrick Hand', sans-serif;
-          font-size: 0.95rem;
+          font-size: 0.9rem;
+          background: #FFFAF3;
+          min-width: 0;
         }
 
         .copy-btn {
-          padding: 10px 20px;
-          background-color: #fffaf3;
-          color: #1f2937;
-          border: 2px solid #1f2937;
-          font-family: 'Mali', cursive;
-          font-size: 0.95rem;
-          font-weight: 600;
+          padding: 10px 14px;
+          background: #FFFAF3;
+          border: 2px solid #1F2937;
+          border-radius: 8px;
           cursor: pointer;
-          box-shadow: 4px 4px 0px #000000;
-          transform: rotate(-0.5deg);
-          align-self: flex-start;
+          font-size: 1rem;
+          transition: all 0.2s;
         }
 
         .copy-btn:hover {
-          transform: scale(1.05) rotate(0deg) !important;
-          box-shadow: 5px 5px 0px #000000;
+          background: #FFF7EA;
         }
 
+        .view-link {
+          display: inline-block;
+          margin-top: 12px;
+          color: #0369A1;
+          font-weight: 600;
+          text-decoration: none;
+        }
+
+        .view-link:hover {
+          text-decoration: underline;
+        }
+
+        /* ===== FILES SECTION ===== */
         .files-section {
-          margin-top: 50px;
-          padding-top: 30px;
-          border-top: 3px dashed #d7c2a8;
+          width: 100%;
         }
 
-        .files-header {
+        .section-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 25px;
+          margin-bottom: 16px;
         }
 
         .section-title {
           font-family: 'Mali', cursive;
-          font-size: 1.8rem;
+          font-size: 1.3rem;
           font-weight: 700;
-          color: #1f2937;
-          transform: rotate(-0.3deg);
+          margin: 0;
         }
 
         .refresh-btn {
-          padding: 12px 18px;
-          background-color: #fffaf3;
-          color: #1f2937;
-          border: 2px solid #1f2937;
-          font-size: 1.2rem;
+          padding: 8px 12px;
+          background: #FFFAF3;
+          border: 2px solid #1F2937;
+          border-radius: 8px;
           cursor: pointer;
-          box-shadow: 4px 4px 0px #000000;
-          transform: rotate(0.5deg);
+          font-size: 1rem;
+          box-shadow: 2px 2px 0px #000000;
+          transition: all 0.2s;
         }
 
         .refresh-btn:hover {
-          transform: scale(1.1) rotate(0deg) !important;
-          box-shadow: 5px 5px 0px #000000;
+          transform: translateY(-1px);
+          box-shadow: 3px 3px 0px #000000;
         }
 
-        .files-list {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: 20px;
+        /* ===== STATES ===== */
+        .loading-state,
+        .empty-state {
+          text-align: center;
+          padding: 32px 16px;
+          color: #4B5563;
         }
 
-        .file-item {
-          background-color: #fff9c4;
-          border: 2px solid #1f2937;
-          padding: 20px;
-          min-height: 120px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          transition: all 0.3s ease;
+        .empty-icon {
+          font-size: 2.5rem;
+          margin-bottom: 8px;
         }
 
-        .file-item:hover {
-          transform: scale(1.05) rotate(0deg) !important;
-          z-index: 10;
-          box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .file-link {
-          text-decoration: none;
+        .empty-state p {
           font-family: 'Mali', cursive;
           font-size: 1.1rem;
           font-weight: 600;
-          margin-bottom: 10px;
+          margin: 0 0 4px;
         }
 
-        .file-date {
-          color: #4b5563;
+        .empty-state span {
           font-size: 0.9rem;
-          font-family: 'Patrick Hand', sans-serif;
         }
 
-        .loading-text,
-        .no-files {
-          text-align: center;
-          color: #4b5563;
-          padding: 30px;
-          font-family: 'Mali', cursive;
-          font-size: 1.1rem;
+        /* ===== FILES GRID ===== */
+        .files-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+          gap: 16px;
         }
 
-        /* Studygram Components */
+        /* ===== STICKY NOTE ===== */
         .sticky-note {
           position: relative;
-          width: 100%;
-          min-height: 120px;
-          padding: 25px 20px;
-          background-color: #fff9c4;
-          color: #1f2937;
-          font-size: 1rem;
-          line-height: 1.6;
-          box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
-          border: 2px solid #1f2937;
-          border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          min-height: 100px;
+          padding: 16px 12px;
+          background-color: #FFF9C4;
+          color: #1F2937;
+          border: 2px solid rgba(0, 0, 0, 0.08);
+          border-radius: 8px;
+          box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.08);
+          transform: rotate(var(--rotate, 0deg));
+          transition: all 0.25s ease;
+          text-decoration: none;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
         }
 
-        .hand-card {
-          position: relative;
-          border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-          border: 3px solid #1f2937;
-          background-color: #fffaf3;
-          transition: all 0.3s ease;
-          box-shadow: 6px 6px 0px #000000;
+        .sticky-note:hover {
+          transform: scale(1.05) rotate(0deg);
+          box-shadow: 6px 6px 16px rgba(0, 0, 0, 0.12);
+          z-index: 10;
         }
 
+        .file-card-icon {
+          font-size: 1.8rem;
+        }
+
+        .file-card-name {
+          font-family: 'Mali', cursive;
+          font-size: 0.85rem;
+          font-weight: 600;
+          text-align: center;
+          word-break: break-word;
+          line-height: 1.3;
+        }
+
+        .file-card-date {
+          font-size: 0.75rem;
+          color: #4B5563;
+        }
+
+        /* ===== HIGHLIGHTS ===== */
         .hl-yellow {
-          background: linear-gradient(
-            to top,
-            rgba(255, 245, 157, 0.9) 55%,
-            transparent 55%
-          );
+          background: linear-gradient(to top, rgba(255, 245, 157, 0.9) 55%, transparent 55%);
           padding: 0.02em 0.14em;
         }
 
         .hl-blue {
-          background: linear-gradient(
-            to top,
-            rgba(179, 229, 252, 0.9) 55%,
-            transparent 55%
-          );
+          background: linear-gradient(to top, rgba(179, 229, 252, 0.9) 55%, transparent 55%);
           padding: 0.02em 0.14em;
         }
 
         .hl-pink {
-          background: linear-gradient(
-            to top,
-            rgba(255, 205, 210, 0.9) 55%,
-            transparent 55%
-          );
+          background: linear-gradient(to top, rgba(255, 205, 210, 0.9) 55%, transparent 55%);
           padding: 0.02em 0.14em;
         }
 
@@ -495,27 +593,69 @@ export default function Home() {
           background-image: url("data:image/svg+xml,%3Csvg width='300' height='12' viewBox='0 0 214 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 10C41 4 79 4 118 6c39 2 58-3 94-4' fill='none' stroke='%23fb7185' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
           background-repeat: no-repeat;
           background-position: 0 100%;
-          background-size: 100% 1em;
+          background-size: 100% 0.8em;
           display: inline-block;
-          padding-bottom: 0.2em;
         }
 
-        @media (max-width: 768px) {
-          .container {
-            padding: 20px 10px;
+        /* ===== FOOTER ===== */
+        .footer {
+          margin-top: 32px;
+          text-align: center;
+          padding: 16px;
+          color: #4B5563;
+          font-size: 0.9rem;
+        }
+
+        .footer p {
+          margin: 0;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+          .page-container {
+            padding: 16px 12px;
           }
 
-          .main-card {
-            padding: 30px 20px;
-            transform: rotate(0deg);
+          .hand-card {
+            padding: 24px 16px 20px;
+            border-width: 2px;
+            box-shadow: 4px 4px 0px #000000;
           }
 
-          .files-list {
-            grid-template-columns: 1fr;
+          .file-label {
+            padding: 20px 12px;
           }
 
-          .file-item {
-            transform: rotate(0deg) !important;
+          .files-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+          }
+
+          .sticky-note {
+            min-height: 90px;
+            padding: 14px 10px;
+          }
+
+          .file-card-icon {
+            font-size: 1.5rem;
+          }
+
+          .file-card-name {
+            font-size: 0.8rem;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .page-container {
+            padding: 32px;
+          }
+
+          .main-content {
+            max-width: 520px;
+          }
+
+          .files-grid {
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
           }
         }
       `}</style>
