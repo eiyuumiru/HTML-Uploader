@@ -86,7 +86,7 @@ Dự án này được thiết kế để deploy trên Vercel:
 |----------|--------|-------|
 | `/api/upload` | POST | Upload file HTML (tối đa 10MB) |
 | `/api/files` | GET | Liệt kê tất cả file HTML đã upload |
-| `/api/cleanup` | GET | Xóa file cũ hơn 24 giờ (chạy tự động mỗi giờ) |
+| `/api/cleanup` | GET | Xóa file cũ hơn 24 giờ (chạy tự động mỗi ngày) |
 | `/view/[filename]` | GET | Render file HTML đã upload |
 
 ## Cấu hình
@@ -103,7 +103,7 @@ Dự án này được thiết kế để deploy trên Vercel:
   "crons": [
     {
       "path": "/api/cleanup",
-      "schedule": "0 * * * *"
+      "schedule": "0 0 * * *"
     }
   ]
 }
