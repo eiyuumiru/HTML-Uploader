@@ -1,5 +1,28 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
+import { Pacifico, Mali, Patrick_Hand } from 'next/font/google';
+
+// Optimized font loading with next/font
+const pacifico = Pacifico({
+  weight: '400',
+  subsets: ['latin', 'vietnamese'],
+  display: 'swap',
+  variable: '--font-pacifico',
+});
+
+const mali = Mali({
+  weight: ['400', '600', '700'],
+  subsets: ['latin', 'vietnamese'],
+  display: 'swap',
+  variable: '--font-mali',
+});
+
+const patrickHand = Patrick_Hand({
+  weight: '400',
+  subsets: ['latin', 'vietnamese'],
+  display: 'swap',
+  variable: '--font-patrick-hand',
+});
 
 export default function Home() {
   const [file, setFile] = useState(null);
@@ -114,15 +137,9 @@ export default function Home() {
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎉</text></svg>" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="Upload và chia sẻ file HTML dễ dàng" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Pacifico&family=Mali:wght@400;600;700&family=Patrick+Hand&display=swap"
-          rel="stylesheet"
-        />
       </Head>
 
-      <div className="page-container">
+      <div className={`page-container ${pacifico.variable} ${mali.variable} ${patrickHand.variable}`}>
         {/* Header */}
         <header className="header">
           <h1 className="logo">HTML Uploader</h1>
@@ -272,8 +289,14 @@ export default function Home() {
           min-height: 100vh;
           scroll-behavior: smooth;
           background-color: #FFF7EA;
-          background-image: url('https://www.transparenttextures.com/patterns/lined-paper-2.png');
-          font-family: 'Patrick Hand', system-ui, sans-serif;
+          /* Inline lined paper pattern - eliminates external request */
+          background-image: repeating-linear-gradient(
+            transparent,
+            transparent 31px,
+            rgba(200, 200, 200, 0.3) 31px,
+            rgba(200, 200, 200, 0.3) 32px
+          );
+          font-family: var(--font-patrick-hand), 'Patrick Hand', system-ui, sans-serif;
           color: #1F2937;
           text-rendering: optimizeLegibility;
           letter-spacing: 0.01em;
@@ -291,7 +314,7 @@ export default function Home() {
         }
 
         .logo {
-          font-family: 'Pacifico', cursive;
+          font-family: var(--font-pacifico), 'Pacifico', cursive;
           font-weight: 400;
           font-size: clamp(2rem, 6vw, 2.8rem);
           background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
@@ -303,7 +326,7 @@ export default function Home() {
         }
 
         .tagline {
-          font-family: 'Mali', cursive;
+          font-family: var(--font-mali), 'Mali', cursive;
           font-size: 1rem;
           color: #4B5563;
           margin: 8px 0 0;
@@ -340,7 +363,7 @@ export default function Home() {
         }
 
         .card-title {
-          font-family: 'Mali', cursive;
+          font-family: var(--font-mali), 'Mali', cursive;
           font-size: 1.3rem;
           font-weight: 700;
           text-align: center;
@@ -402,7 +425,7 @@ export default function Home() {
         }
 
         .file-text {
-          font-family: 'Mali', cursive;
+          font-family: var(--font-mali), 'Mali', cursive;
           font-size: 1.1rem;
           font-weight: 600;
           color: #0369A1;
@@ -423,7 +446,7 @@ export default function Home() {
           color: #1F2937;
           border: 3px solid #1F2937;
           border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-          font-family: 'Mali', cursive;
+          font-family: var(--font-mali), 'Mali', cursive;
           font-size: 1.15rem;
           font-weight: 700;
           cursor: pointer;
@@ -471,7 +494,7 @@ export default function Home() {
         .writing-dots {
           display: flex;
           gap: 2px;
-          font-family: 'Mali', cursive;
+          font-family: var(--font-mali), 'Mali', cursive;
           font-size: 2rem;
           font-weight: 700;
           color: #1F2937;
@@ -496,7 +519,7 @@ export default function Home() {
           margin-top: 16px;
           padding: 16px;
           border-radius: 12px;
-          font-family: 'Mali', cursive;
+          font-family: var(--font-mali), 'Mali', cursive;
           text-align: center;
         }
 
@@ -523,7 +546,7 @@ export default function Home() {
           padding: 10px 12px;
           border: 2px solid #D7C2A8;
           border-radius: 8px;
-          font-family: 'Patrick Hand', sans-serif;
+          font-family: var(--font-patrick-hand), 'Patrick Hand', sans-serif;
           font-size: 0.9rem;
           background: #FFFAF3;
           min-width: 0;
@@ -568,7 +591,7 @@ export default function Home() {
         }
 
         .section-title {
-          font-family: 'Mali', cursive;
+          font-family: var(--font-mali), 'Mali', cursive;
           font-size: 1.3rem;
           font-weight: 700;
           margin: 0;
@@ -602,7 +625,7 @@ export default function Home() {
         }
 
         .loading-state p {
-          font-family: 'Mali', cursive;
+          font-family: var(--font-mali), 'Mali', cursive;
           font-size: 1rem;
           margin: 0;
         }
@@ -619,7 +642,7 @@ export default function Home() {
         }
 
         .empty-state p {
-          font-family: 'Mali', cursive;
+          font-family: var(--font-mali), 'Mali', cursive;
           font-size: 1.1rem;
           font-weight: 600;
           margin: 0 0 4px;
@@ -666,7 +689,7 @@ export default function Home() {
         }
 
         .file-card-name {
-          font-family: 'Mali', cursive;
+          font-family: var(--font-mali), 'Mali', cursive;
           font-size: 0.85rem;
           font-weight: 600;
           text-align: center;
