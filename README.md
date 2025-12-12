@@ -1,89 +1,112 @@
-# HTML Uploader - Vercel
+# HTML Uploader
 
-Hệ thống upload và chia sẻ file HTML trên Vercel với giao diện phong cách Studygram, sử dụng Vercel Blob Storage.
-
-## 🚀 Quick Start
-
-```bash
-# 1. Cài đặt dependencies
-npm install
-
-# 2. Chạy development server
-npm run dev
-
-# 3. Mở trình duyệt tại http://localhost:3000
-```
-
-> 📖 **Xem hướng dẫn chi tiết**: [HUONG_DAN_CHAY.md](./HUONG_DAN_CHAY.md)  
-> ⚡ **Hướng dẫn nhanh**: [QUICK_START.md](./QUICK_START.md)
+Ứng dụng web đơn giản để upload, chia sẻ và chạy file HTML trực tiếp trên trình duyệt. Không cần cài đặt server hay hosting, chỉ cần upload file HTML và nhận link để xem ngay. Xây dựng bằng Next.js và Vercel Blob Storage.
 
 ## Tính năng
 
-- ✅ Upload file HTML
-- ✅ Lưu trữ trên Vercel Blob Storage
-- ✅ Xem danh sách files đã upload
-- ✅ Truy cập file qua URL công khai
-- ✅ Responsive design
+- Upload file HTML với hỗ trợ kéo thả
+- Xem file đã upload trực tiếp trên trình duyệt
+- Liệt kê tất cả file đã upload kèm theo ngày tháng
+- Sao chép link chia sẻ vào clipboard
+- Giao diện responsive với phong cách vẽ tay
 
-## Cài đặt
+## Công nghệ sử dụng
 
-1. **Clone và cài đặt dependencies:**
+- **Framework**: Next.js 14
+- **Lưu trữ**: Vercel Blob Storage
+- **Styling**: CSS-in-JS với styled-jsx
+- **Font**: Google Fonts (Pacifico, Mali, Patrick Hand)
+
+## Cấu trúc dự án
+
+```
+html-uploader/
+├── pages/
+│   ├── api/
+│   │   ├── files.js      # API liệt kê file đã upload
+│   │   ├── upload.js     # API xử lý upload file
+│   │   └── view.js       # API xem nội dung file
+│   ├── view/
+│   │   └── [filename].js # Route động để render file HTML
+│   └── index.js          # Giao diện upload chính
+├── next.config.js        # Cấu hình Next.js
+├── vercel.json           # Cài đặt deploy Vercel
+└── package.json
+```
+
+## Bắt đầu
+
+### Yêu cầu
+
+- Node.js 18 trở lên
+- Tài khoản Vercel đã kích hoạt Blob Storage
+
+### Cài đặt
+
+1. Clone repository:
+
+```bash
+git clone https://github.com/eiyuumiru/html-uploader.git
+cd html-uploader
+```
+
+2. Cài đặt dependencies:
+
 ```bash
 npm install
 ```
 
-2. **Cấu hình Vercel Blob Storage:**
-   - Đăng nhập vào [Vercel Dashboard](https://vercel.com/dashboard)
-   - Vào **Storage** > **Create Database** > Chọn **Blob**
-   - Tạo Blob Store mới
-   - Copy **BLOB_READ_WRITE_TOKEN** từ Settings
-   - Thêm biến môi trường vào Vercel project:
-     - Vào Project Settings > Environment Variables
-     - Thêm: `BLOB_READ_WRITE_TOKEN` = token vừa copy
+3. Tạo file `.env.local` với token Vercel Blob Storage:
 
-3. **Chạy development server (local):**
+```
+BLOB_READ_WRITE_TOKEN=your_vercel_blob_token_here
+```
+
+4. Chạy development server:
+
 ```bash
-# Tạo file .env.local với:
-BLOB_READ_WRITE_TOKEN=your_token_here
-
 npm run dev
 ```
 
-4. **Deploy lên Vercel:**
-```bash
-# Cài Vercel CLI (nếu chưa có)
-npm i -g vercel
+5. Mở [http://localhost:3000](http://localhost:3000) trên trình duyệt.
 
-# Deploy
-vercel
+## Deploy
+
+Dự án này được thiết kế để deploy trên Vercel:
+
+1. Đẩy code lên GitHub repository
+2. Import dự án trong Vercel
+3. Thêm biến môi trường `BLOB_READ_WRITE_TOKEN` trong cài đặt dự án Vercel
+4. Deploy
+
+## API Endpoints
+
+| Endpoint | Method | Mô tả |
+|----------|--------|-------|
+| `/api/upload` | POST | Upload file HTML (tối đa 10MB) |
+| `/api/files` | GET | Liệt kê tất cả file HTML đã upload |
+| `/view/[filename]` | GET | Render file HTML đã upload |
+
+## Cấu hình
+
+### vercel.json
+
+```json
+{
+  "functions": {
+    "pages/api/**/*.js": {
+      "maxDuration": 30
+    }
+  }
+}
 ```
 
-Hoặc push code lên GitHub và connect với Vercel (khuyến nghị).
+### Biến môi trường
 
-## Cấu trúc project
+| Biến | Mô tả |
+|------|-------|
+| `BLOB_READ_WRITE_TOKEN` | Token đọc/ghi Vercel Blob Storage |
 
-```
-├── pages/
-│   ├── index.js          # Trang chủ với form upload
-│   ├── [filename].js     # Dynamic route để view HTML file
-│   └── api/
-│       ├── upload.js     # API xử lý upload
-│       └── files.js      # API list files
-├── package.json
-├── next.config.js
-└── vercel.json
-```
+## License
 
-## Sử dụng
-
-1. Truy cập trang chủ
-2. Chọn file HTML cần upload
-3. Click "Upload"
-4. Copy URL và chia sẻ
-
-## Lưu ý
-
-- File HTML sẽ được lưu với tên gốc
-- Tất cả files đều public
-- Không có giới hạn kích thước file (theo Vercel limits)
-
+MIT
