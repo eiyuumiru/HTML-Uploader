@@ -9,6 +9,7 @@
 - Liệt kê tất cả file đã upload kèm theo ngày tháng
 - Sao chép link chia sẻ vào clipboard
 - Giao diện responsive với phong cách vẽ tay
+- Tự động xóa file sau 24 giờ
 
 ## Công nghệ sử dụng
 
@@ -25,7 +26,7 @@ html-uploader/
 │   ├── api/
 │   │   ├── files.js      # API liệt kê file đã upload
 │   │   ├── upload.js     # API xử lý upload file
-│   │   └── view.js       # API xem nội dung file
+│   │   └── cleanup.js    # API xóa file cũ hơn 24 giờ
 │   ├── view/
 │   │   └── [filename].js # Route động để render file HTML
 │   └── index.js          # Giao diện upload chính
@@ -85,6 +86,7 @@ Dự án này được thiết kế để deploy trên Vercel:
 |----------|--------|-------|
 | `/api/upload` | POST | Upload file HTML (tối đa 10MB) |
 | `/api/files` | GET | Liệt kê tất cả file HTML đã upload |
+| `/api/cleanup` | GET | Xóa file cũ hơn 24 giờ (chạy tự động mỗi giờ) |
 | `/view/[filename]` | GET | Render file HTML đã upload |
 
 ## Cấu hình
@@ -97,7 +99,13 @@ Dự án này được thiết kế để deploy trên Vercel:
     "pages/api/**/*.js": {
       "maxDuration": 30
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/cleanup",
+      "schedule": "0 * * * *"
+    }
+  ]
 }
 ```
 

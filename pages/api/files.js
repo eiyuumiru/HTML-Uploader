@@ -6,12 +6,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    // List all blobs (HTML files)
-    const { blobs } = await list({
-      prefix: '', // Get all files, or specify a prefix to filter
-    });
+    const { blobs } = await list({ prefix: '' });
 
-    // Filter HTML files and format response
     const htmlFiles = blobs
       .filter((blob) => blob.pathname.endsWith('.html'))
       .map((blob) => ({
@@ -20,7 +16,7 @@ export default async function handler(req, res) {
         uploadedAt: blob.uploadedAt,
         size: blob.size,
       }))
-      .sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt)); // Sort by date, newest first
+      .sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
 
     return res.status(200).json({
       files: htmlFiles,
@@ -33,4 +29,3 @@ export default async function handler(req, res) {
     });
   }
 }
-

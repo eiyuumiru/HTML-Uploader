@@ -1,44 +1,25 @@
 import { list } from '@vercel/blob';
 
-export const config = {
-    api: {
-        responseLimit: false,
-    },
-};
-
 export async function getServerSideProps(context) {
     const { filename } = context.params;
 
     try {
-        // List blobs to find the matching file
-        const { blobs } = await list({
-            prefix: '',
-        });
-
-        // Find the blob with matching filename
+        const { blobs } = await list({ prefix: '' });
         const blob = blobs.find(b => b.pathname === filename || b.pathname === decodeURIComponent(filename));
 
         if (!blob) {
-            return {
-                notFound: true,
-            };
+            return { notFound: true };
         }
 
-        // Fetch the HTML content
         const response = await fetch(blob.url);
         const htmlContent = await response.text();
 
         return {
-            props: {
-                htmlContent,
-                filename,
-            },
+            props: { htmlContent, filename },
         };
     } catch (error) {
         console.error('Error fetching file:', error);
-        return {
-            notFound: true,
-        };
+        return { notFound: true };
     }
 }
 

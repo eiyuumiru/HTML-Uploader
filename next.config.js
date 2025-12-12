@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // Cho phép serve static files
   async headers() {
     return [
       {
@@ -18,4 +17,3 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
-
